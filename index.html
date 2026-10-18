@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#245b50">
+  <meta name="description" content="記下生活裡的小小美好。每天一件也很好。">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>三件好事 · 留住日常的光</title>
+</head>
+<body>
+  <div class="shell">
+    <header class="brand"><a href="./" aria-label="三件好事首頁"><span class="brand-icon" aria-hidden="true">✳</span> 三件好事</a><span class="brand-note">留住日常的光</span></header>
+    <main>
+      <section class="intro"><p class="eyebrow">A LITTLE GOOD, EVERY DAY</p><h1>平凡的日子，也有光。</h1><p>不必是大事。今天有什麼，讓你微微笑了一下？</p></section>
+      <div id="storage-warning" class="warning" role="alert" hidden></div>
+      <section id="daily-view" aria-label="每日紀錄">
+        <div class="section-heading"><div><p class="eyebrow" id="day-label">今天的美好</p><h2 id="date-heading"></h2></div><label class="date-picker">選擇日期<input id="selected-date" type="date" min="1900-01-01" max="2100-12-31" required></label></div>
+        <div class="progress-card"><span class="sun" aria-hidden="true">☀</span><div><strong id="progress-title"></strong><p id="progress-description"></p></div><div class="dots" id="progress-dots" aria-hidden="true"></div></div>
+      </section>
+      <section id="calendar-view" aria-label="日曆回顧" hidden>
+        <div class="section-heading"><div><p class="eyebrow">回頭看看，那些小美好</p><h2>日曆回顧</h2></div><button id="calendar-today" class="secondary">回到今天</button></div>
+        <div class="calendar-card"><div class="month-heading"><button id="previous-month" class="icon-button" aria-label="上個月">‹</button><h3 id="month-title" aria-live="polite"></h3><button id="next-month" class="icon-button" aria-label="下個月">›</button></div><div class="weekdays" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div><div id="calendar-grid" class="calendar-grid"></div><p class="calendar-hint">日期下的小圓點，代表那天有留下好事。</p></div>
+        <h3 id="calendar-selection" class="selected-heading"></h3>
+      </section>
+      <section id="entries-view" aria-label="好事列表">
+        <div class="list-toolbar"><label>分類篩選<select id="category-filter"><option value="">全部分類</option></select></label><button id="add-entry" class="primary">＋ 記下一件好事</button></div>
+        <div id="entries"></div>
+        <p class="gentle-note">一天一件也很好，慢慢累積就好。</p>
+      </section>
+      <section id="backup-view" aria-label="備份與資料" hidden>
+        <p class="eyebrow">好好收藏你的日常</p><h2>備份與資料</h2>
+        <div class="info-card"><h3>你的好事，留在你的裝置裡</h3><p>紀錄儲存在目前瀏覽器，不會上傳到伺服器。目前沒有帳號或跨裝置自動同步。</p><p>清除瀏覽器資料、移除 APP 或更換網址可能讓紀錄遺失。建議定期匯出，並將備份保存在安全的位置。無痕模式不適合長期記錄。</p><p id="total-count"></p><button id="export-backup" class="primary">↓ 匯出 JSON 備份</button></div>
+        <div class="info-card"><h3>從備份找回好事</h3><p>匯入會新增目前沒有的紀錄；相同編號保留目前裝置上的版本，不會覆蓋。備份含有日記全文，請妥善保管。</p><label class="file-label">選擇 JSON 備份<input id="import-backup" type="file" accept="application/json,.json"></label></div>
+        <div class="info-card"><h3>安裝到 Android 手機</h3><p>用 Chrome 開啟本網站，從選單選擇「安裝應用程式」或「新增至主畫面」。第一次開啟需連線，離線準備完成後即可離線記錄。</p><p id="offline-status" role="status">正在確認離線功能…</p><button id="install-app" class="secondary" hidden>安裝三件好事</button></div>
+      </section>
+    </main>
+    <footer>把小小的好事，留給未來的自己。</footer>
+  </div>
+  <nav class="bottom-nav" aria-label="主要導覽"><button data-view="daily" aria-current="page"><span aria-hidden="true">☀</span>每日好事</button><button data-view="calendar"><span aria-hidden="true">▦</span>日曆回顧</button><button data-view="backup"><span aria-hidden="true">↓</span>備份與資料</button></nav>
+  <dialog id="entry-dialog"><form id="entry-form"><div class="dialog-heading"><div><p class="eyebrow">收集一點美好</p><h2 id="editor-title">記下一件好事</h2></div><button type="button" id="close-dialog" class="icon-button" aria-label="關閉">×</button></div><label>日期<input id="entry-date" type="date" min="1900-01-01" max="2100-12-31" required></label><label>發生了什麼好事？<textarea id="entry-text" maxlength="2000" rows="4" placeholder="例如：午休時散步，遇見一隻很親人的貓。" required></textarea></label><label>分類<select id="entry-category"></select></label><label>為什麼這件事讓你開心？<span class="optional">選填</span><textarea id="entry-reflection" maxlength="2000" rows="3" placeholder="也可以寫下：我做了什麼，讓這件事發生？"></textarea></label><p id="form-error" class="error" role="alert"></p><button type="submit" class="primary save-button">儲存這份美好</button></form></dialog>
+  <p id="toast" class="toast" role="status" hidden></p>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
