@@ -15,7 +15,7 @@ test('匯入拒絕錯誤版本、壞資料、重複 ID 與過長內容', () => {
   assert.throws(() => readBackup('{'));
   assert.throws(() => readBackup(JSON.stringify({ app: 'another-app', version: 1, entries: [] })));
   assert.throws(() => readBackup(JSON.stringify({ app: 'three-good-things', version: 2, entries: [] })));
-  for (const bad of [{ ...entry, text: ' ' }, { ...entry, date: '2026-02-30' }, { ...entry, category: 'invalid' }, { ...entry, reflection: null }, { ...entry, text: 'a'.repeat(2001) }]) assert.throws(() => validateEntries([bad]));
+  for (const bad of [{ ...entry, text: ' ' }, { ...entry, date: '2026-02-30' }, { ...entry, category: ' ' }, { ...entry, category: 'a'.repeat(41) }, { ...entry, category: null }, { ...entry, reflection: null }, { ...entry, text: 'a'.repeat(2001) }]) assert.throws(() => validateEntries([bad]));
   assert.throws(() => validateEntries([entry, entry]));
   assert.throws(() => validateEntries({}));
 });
@@ -25,4 +25,11 @@ test('合併保留現有版本，重複匯入不增加筆數', () => {
   assert.equal(merged.length, 2);
   assert.equal(merged[0].text, entry.text);
   assert.deepEqual(mergeEntries(merged, incoming), merged);
+});
+
+test('自訂分類可保存、備份與合併，舊版分類仍可讀取', () => {
+  const custom = { ...entry, category: '美食時光' };
+  assert.deepEqual(readBackup(makeBackup([custom])), [custom]);
+  assert.deepEqual(validateEntries([entry]), [entry]);
+  assert.equal(mergeEntries([entry], [{ ...custom, id: 'custom' }])[1].category, '美食時光');
 });

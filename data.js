@@ -12,9 +12,9 @@ export function validateEntries(entries) {
   if (!Array.isArray(entries) || entries.length > 50000) throw new Error('備份格式不正確，或超過 50,000 筆上限。');
   const ids = new Set();
   return entries.map(entry => {
-    if (!entry || typeof entry.id !== 'string' || !entry.id || entry.id.length > 100 || ids.has(entry.id) || !validDate(entry.date) || typeof entry.text !== 'string' || !entry.text.trim() || entry.text.length > 2000 || typeof entry.reflection !== 'string' || entry.reflection.length > 2000 || !CATEGORIES.includes(entry.category)) throw new Error('紀錄格式不正確，沒有匯入任何資料。');
+    if (!entry || typeof entry.id !== 'string' || !entry.id || entry.id.length > 100 || ids.has(entry.id) || !validDate(entry.date) || typeof entry.text !== 'string' || !entry.text.trim() || entry.text.length > 2000 || typeof entry.reflection !== 'string' || entry.reflection.length > 2000 || (typeof entry.category !== 'string' || !entry.category.trim() || entry.category.length > 40)) throw new Error('紀錄格式不正確，沒有匯入任何資料。');
     ids.add(entry.id);
-    return { id: entry.id, date: entry.date, text: entry.text.trim(), reflection: entry.reflection.trim(), category: entry.category };
+    return { id: entry.id, date: entry.date, text: entry.text.trim(), reflection: entry.reflection.trim(), category: entry.category.trim() };
   });
 }
 export function readBackup(text) {

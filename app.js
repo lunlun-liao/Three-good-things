@@ -24,10 +24,25 @@ function persist(next) {
   catch { throw new Error('儲存失敗，可能是空間不足或瀏覽器限制。請先匯出備份；這次變更尚未儲存。'); }
   entries = checked;
 }
-for (const category of CATEGORIES) {
-  $('entry-category').add(new Option(category, category));
-  $('category-filter').add(new Option(category, category));
+function refreshCategories() {
+  const categories = [...new Set([...CATEGORIES, ...entries.map(entry => entry.category)])];
+  for (const id of ['entry-category', 'category-filter']) {
+    const select = $(id);
+    const previous = select.value;
+    select.replaceChildren();
+    if (id === 'category-filter') select.add(new Option('全部分類', ''));
+    for (const category of categories) select.add(new Option(category, category));
+    if (id === 'entry-category') select.add(new Option('新增', ''));
+    if ([...select.options].some(option => option.value === previous)) select.value = previous;
+  }
 }
+function toggleCustomCategory() {
+  const custom = $('entry-category').value === '';
+  $('custom-category-label').hidden = !custom;
+  $('custom-category').required = custom;
+  if (custom) $('custom-category').focus();
+}
+$('entry-category').addEventListener('change', toggleCustomCategory);
 const formatDate = date => new Date(`${date}T12:00:00`).toLocaleDateString('zh-TW', { month: 'long', day: 'numeric', weekday: 'long' });
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -36,6 +51,7 @@ function element(tag, className, text) {
   return node;
 }
 function render() {
+  refreshCategories();
   $('daily-view').hidden = view !== 'daily';
   $('calendar-view').hidden = view !== 'calendar';
   $('backup-view').hidden = view !== 'backup';
@@ -112,6 +128,8 @@ function openEditor(entry = null) {
   $('entry-text').value = entry?.text ?? '';
   $('entry-reflection').value = entry?.reflection ?? '';
   $('entry-category').value = entry?.category ?? CATEGORIES[0];
+  $('custom-category-label').hidden = true;
+  $('custom-category').required = false;
   $('editor-title').textContent = entry ? '編輯這件好事' : '記下一件好事';
   $('form-error').textContent = '';
   $('entry-dialog').showModal();
@@ -123,7 +141,9 @@ $('entry-text').addEventListener('input', () => $('entry-text').setCustomValidit
 $('entry-form').addEventListener('submit', event => {
   event.preventDefault();
   if (!$('entry-text').value.trim()) { $('entry-text').setCustomValidity('請寫下一件好事。'); $('entry-text').reportValidity(); return; }
-  const entry = { id: editingId ?? crypto.randomUUID(), date: $('entry-date').value, text: $('entry-text').value.trim(), category: $('entry-category').value, reflection: $('entry-reflection').value.trim() };
+  const category = $('entry-category').value || $('custom-category').value.trim();
+  if (!category) { $('form-error').textContent = '請輸入新的分類名稱。'; $('custom-category').focus(); return; }
+  const entry = { id: editingId ?? crypto.randomUUID(), date: $('entry-date').value, text: $('entry-text').value.trim(), category, reflection: $('entry-reflection').value.trim() };
   try {
     persist(editingId ? entries.map(item => item.id === editingId ? entry : item) : [...entries, entry]);
     selectedDate = entry.date;
