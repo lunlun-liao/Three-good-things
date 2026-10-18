@@ -1,0 +1,4 @@
+Signer #1 certificate DN: CN=Three Good Things, OU=Android App
+Signer #1 certificate SHA-256 digest: 77345ff0aee8225d8c0649738574ce27757ff09d7b564a88563908aada6b52c5
+Signer #1 certificate SHA-1 digest: c2b09d09945108f8b1e643122c48ae96d567be0e
+Signer #1 certificate MD5 digest: 67cf2d1932bfa1bfd12152c14e5eb966

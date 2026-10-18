@@ -1,6 +1,12 @@
 # 三件好事 Three Good Things
 
-給 Android 手機使用的繁體中文漸進式網頁應用程式（PWA）。每天留下一點美好，三件是引導，不是限制。
+給 Android 手機使用的繁體中文日記 APP，同時提供獨立 APK 與網頁版（PWA）。每天留下一點美好，三件是引導，不是限制。
+
+## Android APK
+
+[下載 APK 與安裝說明](downloads/README.md)。APK 可獨立啟動，不需要 Chrome 或網路；使用 Android 原生介面，不需要 WebView 或瀏覽器。舊網頁版的紀錄請先匯出 JSON，再到 APK 匯入。原生開發與簽章方式見 [android/README.md](android/README.md)。
+
+以下開發環境與 Pages 說明是網頁版的流程。
 
 ## 第一版功能
 
@@ -15,7 +21,7 @@
 
 這一版是 PWA，沒有外部套件、後端、帳號、API 金鑰或資料庫需求。開發需要文字編輯器、Git 和本機靜態 HTTP 伺服器。自動化檢查需要 Node.js 22 或以上。
 
-手機安裝需要 **HTTPS 網站**與 Android Chrome；無須 Android Studio。這個版本沒有產生 APK，也未上架 Google Play。若未來要原生 Android 功能或商店上架，再規劃 Android SDK、簽章與封裝流程。
+手機安裝需要 **HTTPS 網站**與 Android Chrome；無須 Android Studio。另外已提供獨立 APK；未上架 Google Play。APK 使用 Android SDK 建置、正式私鑰簽署，安裝方式見上方說明。
 
 ## Windows 本機開發
 
@@ -52,6 +58,8 @@ Pages 可用性依 GitHub 帳號方案與儲存庫可見性而定。啟用 Pages
 在新增／編輯好事的分類選單選「新增」，即可輸入最多 40 字的分類名稱。儲存好事後，這個分類就會出現在後續的選單與篩選中；取消編輯不會新增分類。自訂分類會隨好事一起備份與還原。
 
 ## 資料保存與備份
+
+以下瀏覽器儲存說明適用網頁版；APK 使用 APP 私有的 JSON 檔案與 Android AtomicFile，不使用瀏覽器儲存空間。
 
 日記以 `three-good-things:v1` 為鍵儲存在目前來源的瀏覽器 localStorage。沒有雲端同步或資料加密。共用裝置的其他使用者可能讀取資料，請使用裝置螢幕鎖。
 
